@@ -1,0 +1,49 @@
+<?php
+
+use Drupal\Core\Form\FormStateInterface;
+
+
+/**
+ * Implements hook_theme().
+ */
+function ajax_form_example_theme() {
+  return [
+    'ajax_contact_form' => [
+      'variables' => [
+        'vars' => NULL,
+      ],
+      'template' => 'ajax-contact-form',
+    ],
+  ];
+}
+
+/**
+ * Implements hook_form_alter().
+ *
+ * @param $form
+ * @param FormStateInterface $form_state
+ * @param $form_id
+ */
+function ajax_form_example_form_ajax_form_example_contact_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+
+  $form['#attributes']['class'][] = 'form-holder';
+}
+
+/**
+ * Implements hook_mail().
+ */
+function ajax_form_example_mail($key, &$message, $params) {
+
+  $options = array(
+    'langcode' => $message['langcode'],
+  );
+
+ switch ($key) {
+   case 'public_form_submission':
+     $message['from'] = \Drupal::config('system.site')->get('mail');
+     $message['subject'] = t('Form submission: @title', array('@title' => $params['title']), $options);
+     $message['headers']['Reply-To'] = \Drupal::config('system.site')->get('mail');
+     $message['body'][] = $params['message'];
+     break;
+ }
+}

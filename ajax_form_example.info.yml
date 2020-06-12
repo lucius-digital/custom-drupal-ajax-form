@@ -1,0 +1,5 @@
+name: 'Ajax Form Example'
+type: module
+description: 'Provides a working ajax form'
+core_version_requirement: ^9
+package: 'Custom'
